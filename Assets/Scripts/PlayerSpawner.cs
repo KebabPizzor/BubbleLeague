@@ -21,6 +21,12 @@ public class PlayerSpawner : MonoBehaviour
             FindFirstObjectByType<GameController>().StartGame();
         }
         FindFirstObjectByType<GameController>().RegisterPlayer(players[playerCount]);
+        
+        if (playerInput.currentControlScheme == "KeyboardMouse")
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     [UsedImplicitly]
