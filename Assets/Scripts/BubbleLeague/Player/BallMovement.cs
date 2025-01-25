@@ -4,6 +4,7 @@ using UnityEngine.InputSystem;
 public class BallMovement : MonoBehaviour
 {
     [SerializeField] private GameObject m_sphere;
+    [SerializeField] private GameObject m_camera;
 
     [SerializeField] private float m_speed = 10.0f;
     [SerializeField] private float m_boostSpeed = 10.0f;
@@ -47,6 +48,7 @@ public class BallMovement : MonoBehaviour
     private void LateUpdate()
     {
         transform.position = m_sphere.transform.position;
+        m_camera.transform.Rotate(Vector3.left * (m_lookInput.y * m_rotationSpeed));
     }
 
     private void FixedUpdate()
