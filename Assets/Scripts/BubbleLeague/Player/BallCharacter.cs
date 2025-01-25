@@ -8,25 +8,18 @@ public class BallCharacter : PlayerBase
     [SerializeField] private float m_boostSpeed = 10.0f;
     [Range(0.01f, 1.0f)] [SerializeField] private float m_rotationSpeed = 10.0f;
 
-    private Rigidbody m_sphereRigidBody;
     private Vector2 m_moveInput = Vector2.zero;
     private Vector2 m_lookInput = Vector2.zero;
-    private bool m_isBoosting = false;
 
     private void OnEnable()
     {
         Initialize();
-        m_sphereRigidBody = m_sphere.GetComponent<Rigidbody>();
+        m_rigidbody = m_sphere.GetComponent<Rigidbody>();
     }
 
     private void OnDisable()
     {
         Dispose();
-    }
-
-    protected override void OnJump(bool input)
-    {
-        Debug.Log("PlayerCharacter.OnBreak");
     }
 
     protected override void OnLook(Vector2 input)
@@ -52,7 +45,7 @@ public class BallCharacter : PlayerBase
     private void FixedUpdate()
     {
         var movementForce = m_moveInput.y * transform.forward + m_moveInput.x * transform.right;
-        m_sphereRigidBody.AddForce(movementForce * ((m_isBoosting ? m_boostSpeed : m_speed) * Time.fixedDeltaTime),
+        m_rigidbody.AddForce(movementForce * ((m_isBoosting ? m_boostSpeed : m_speed) * Time.fixedDeltaTime),
             ForceMode.Acceleration);
     }
 }

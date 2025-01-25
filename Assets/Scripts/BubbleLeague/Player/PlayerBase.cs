@@ -3,7 +3,10 @@
 public class PlayerBase : MonoBehaviour
 {
     [SerializeField] protected InputReader m_inputReader;
+    [SerializeField] protected float m_jumpForce = 10000.0f;
+    protected Rigidbody m_rigidbody;
     
+    protected bool m_isBoosting = false;
     protected void Initialize()
     {
         if (m_inputReader != null)
@@ -30,8 +33,9 @@ public class PlayerBase : MonoBehaviour
     {
     }
 
-    protected virtual void OnJump(bool input)
+    private void OnJump(bool input)
     {
+        m_rigidbody.AddForce(Vector3.up * m_jumpForce, ForceMode.Impulse);
     }
 
     protected virtual void OnMove(Vector2 input)

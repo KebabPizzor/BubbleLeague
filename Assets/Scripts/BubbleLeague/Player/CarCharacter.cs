@@ -3,21 +3,22 @@ public class CarCharacter : PlayerBase
 {
     //[SerializeField] private InputReader m_inputReader;
     [SerializeField] private float m_motorTorque = 2000.0f;
+    [SerializeField] private float m_boostMotorTorque = 2000.0f;
     [SerializeField] private float m_brakeTorque = 2000.0f;
     [SerializeField] private float m_maxSpeed = 20.0f;
     [SerializeField] private float m_steeringRange = 30.0f;
     [SerializeField] private float m_steeringRangeAtMaxSpeed = 10.0f;
     [SerializeField] private float m_centreOfGravityOffset = -1.0f;
-
+    
+    
     private Vector2 m_moveInput = Vector2.zero;
     private WheelControl[] m_wheels;
-    private Rigidbody m_rigidBody;
 
     protected void OnEnable()
     {
         Initialize();
-        m_rigidBody = GetComponent<Rigidbody>();
-        m_rigidBody.centerOfMass += Vector3.up * m_centreOfGravityOffset;
+        m_rigidbody = GetComponent<Rigidbody>();
+        m_rigidbody.centerOfMass += Vector3.up * m_centreOfGravityOffset;
         m_wheels = GetComponentsInChildren<WheelControl>();
     }
 
@@ -30,10 +31,6 @@ public class CarCharacter : PlayerBase
     {
     }
 
-    protected override void OnJump(bool input)
-    {
-    }
-
     protected override void OnMove(Vector2 input)
     {
         m_moveInput = input;
@@ -41,9 +38,9 @@ public class CarCharacter : PlayerBase
 
     private void Update()
     {
-        var forwardSpeed = Vector3.Dot(transform.forward, m_rigidBody.linearVelocity);
+        var forwardSpeed = Vector3.Dot(transform.forward, m_rigidbody.linearVelocity);
         var speedFactor = Mathf.InverseLerp(0, m_maxSpeed, forwardSpeed);
-        var currentMotorTorque = Mathf.Lerp(m_motorTorque, 0, speedFactor);
+        var currentMotorTorque = Mathf.Lerp(m_isBoosting ? m_motorTorque : m_boostMotorTorque, 0, speedFactor);
         var currentSteerRange = Mathf.Lerp(m_steeringRange, m_steeringRangeAtMaxSpeed, speedFactor);
         var isAccelerating = Mathf.Sign(m_moveInput.y) == Mathf.Sign(forwardSpeed);
 
