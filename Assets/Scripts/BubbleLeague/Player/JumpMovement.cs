@@ -14,16 +14,11 @@ namespace BubbleLeague.Player
         [SerializeField] private Vector3 m_fastFallGravity = new Vector3(0f, -10f, 0f);
         private float m_timeWithoutFastFall;
         [SerializeField] private LayerMask m_groundLayer;
-        [Range(0.01f, 1.0f)][SerializeField] private float m_groundCheckRadius = 0.2f;
+        [SerializeField] private float m_groundCheckRadius = 0.2f;
 
         protected void Awake()
         {
             m_rigidbody = m_sphere.GetComponent<Rigidbody>();
-        }
-
-        private void Update()
-        {
-            m_isGrounded = Physics.CheckSphere(transform.position, 0.7f, m_groundLayer);
         }
 
         public void OnJump()
@@ -36,11 +31,24 @@ namespace BubbleLeague.Player
 
         private void FixedUpdate()
         {
+            
+            m_isGrounded = Physics.CheckSphere(GetGroundCheckPosition(), m_groundCheckRadius, m_groundLayer);
             if (m_timeWithoutFastFall > 0f)
             {
                 m_timeWithoutFastFall -= Time.fixedDeltaTime;
                 m_rigidbody.AddForce(m_fastFallGravity, ForceMode.Acceleration);
             }
+        }
+
+        Vector3 GetGroundCheckPosition()
+        {
+            return m_rigidbody.GetComponent<Collider>().bounds.center - new Vector3(0f, m_rigidbody.GetComponent<Collider>().bounds.extents.y, 0f);
+        }
+
+        private void OnDrawGizmos()
+        {
+            if (m_rigidbody == null) return;
+            Gizmos.DrawSphere(GetGroundCheckPosition(), m_groundCheckRadius);
         }
     }
 }

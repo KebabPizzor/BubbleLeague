@@ -98,8 +98,8 @@ MonoBehaviour:
   m_fastFallGravity: {x: 0, y: -10, z: 0}
   m_groundLayer:
     serializedVersion: 2
-    m_Bits: 64
-  m_groundCheckRadius: 0.51
+    m_Bits: 0
+  m_groundCheckRadius: 0.01
 --- !u!1 &4613042699523928808
 GameObject:
   m_ObjectHideFlags: 0
