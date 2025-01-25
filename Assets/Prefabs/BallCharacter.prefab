@@ -96,6 +96,10 @@ MonoBehaviour:
   m_jumpForce: 500
   m_jumpFastFallDelay: 1
   m_fastFallGravity: {x: 0, y: -10, z: 0}
+  m_groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  m_groundCheckRadius: 0.51
 --- !u!1 &4613042699523928808
 GameObject:
   m_ObjectHideFlags: 0
