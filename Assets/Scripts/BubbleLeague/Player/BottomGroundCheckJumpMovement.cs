@@ -44,11 +44,5 @@ namespace BubbleLeague.Player
         {
             return m_rigidbody.GetComponent<Collider>().bounds.center - new Vector3(0f, m_rigidbody.GetComponent<Collider>().bounds.extents.y, 0f);
         }
-
-        private void OnDrawGizmos()
-        {
-            if (m_rigidbody == null) return;
-            Gizmos.DrawSphere(GetGroundCheckPosition(), m_groundCheckRadius);
-        }
     }
 }

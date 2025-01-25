@@ -12,6 +12,14 @@ public class GameController : MonoBehaviour
     public void RegisterPlayer(Player player)
     {
         _players.Add(player);
+        if (_players.Count == 1)
+        {
+            player.MakeAttacker();
+        }
+        else
+        {
+            player.MakeDefender();
+        }
     }
 
     public void UnregisterPlayer(Player player)
