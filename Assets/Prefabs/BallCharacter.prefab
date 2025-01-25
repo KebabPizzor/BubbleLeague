@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 4857237431936960133}
   - component: {fileID: 5576232344139377045}
   - component: {fileID: 3200229043694948176}
+  - component: {fileID: 5529260459330027328}
+  - component: {fileID: 2194312431171033237}
   m_Layer: 0
   m_Name: PlayerCharacter
   m_TagString: Untagged
@@ -87,19 +89,59 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 399737167954183946}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e0e0d25eb0ee4739af1b1faaf4611ede, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   m_sphere: {fileID: 4613042699523928808}
-  m_jumpForce: 500
+  m_jumpForce: 1000
   m_jumpFastFallDelay: 1
   m_fastFallGravity: {x: 0, y: -10, z: 0}
   m_groundLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   m_groundCheckRadius: 0.01
+--- !u!114 &5529260459330027328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399737167954183946}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ce750eb4f8d48ff97718c1356952c82, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_sphere: {fileID: 4613042699523928808}
+  m_jumpForce: 1000
+  m_jumpFastFallDelay: 1
+  m_fastFallGravity: {x: 0, y: -10, z: 0}
+  m_groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  m_groundCheckMultiplier: 1.01
+--- !u!114 &2194312431171033237
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 399737167954183946}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 06dabd7825874070a1f77d50b6c7cdf4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_sphere: {fileID: 4613042699523928808}
+  m_jumpForce: 1000
+  m_jumpFastFallDelay: 1
+  m_fastFallGravity: {x: 0, y: -10, z: 0}
+  m_groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  m_groundCheckMultiplier: 1.01
 --- !u!1 &4613042699523928808
 GameObject:
   m_ObjectHideFlags: 0
@@ -117,6 +159,7 @@ GameObject:
   - component: {fileID: 1047021055705198620}
   - component: {fileID: 7493258030825651939}
   - component: {fileID: 8181325527385391629}
+  - component: {fileID: 7143700079325795594}
   m_Layer: 0
   m_Name: BallCharacter
   m_TagString: Untagged
@@ -470,6 +513,31 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 5529260459330027328}
+        m_TargetAssemblyTypeName: BubbleLeague.Player.SphericGroundCheckJumpMovement,
+          Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2194312431171033237}
+        m_TargetAssemblyTypeName: BubbleLeague.Player.WallJumpMovement, Assembly-CSharp
+        m_MethodName: OnJump
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   LookEvent:
     m_PersistentCalls:
       m_Calls:
@@ -500,6 +568,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &7143700079325795594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4613042699523928808}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a0032562fad4832a34cebdac13e5649, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  LatestGroundContact: {x: 0, y: 0, z: 0}
 --- !u!1 &6371697337903862814
 GameObject:
   m_ObjectHideFlags: 0
