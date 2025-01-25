@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameController : MonoBehaviour
 {
     public event Action<float> TimerUpdated;
     [SerializeField] private float m_gameDuration = 60.0f;
-    [SerializeField] GameObject hudPrefab;
+    [SerializeField] GameObject playerHudPrefab;
     
     private readonly List<Player> _players = new();
     private float m_timer;
@@ -14,9 +15,6 @@ public class GameController : MonoBehaviour
     public void StartGame()
     {
         m_timer = m_gameDuration;
-        var hud = Instantiate(hudPrefab).GetComponent<HUD>();
-        hud.Initialize();
-        TimerUpdated += hud.UpdateTimer;
     }
 
     private void Update()
@@ -37,6 +35,13 @@ public class GameController : MonoBehaviour
     public void RegisterPlayer(Player player)
     {
         _players.Add(player);
+        
+        var hud = Instantiate(playerHudPrefab).GetComponent<HUD>();
+        var canvas = hud.GetComponentInChildren<Canvas>();
+        canvas.worldCamera = player.GetComponentInChildren<Camera>();
+        hud.Initialize();
+        TimerUpdated += hud.UpdateTimer;
+        
         if (_players.Count == 1)
         {
             player.MakeAttacker();

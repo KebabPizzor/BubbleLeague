@@ -155,3 +155,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9da1b43e1be4409c93f70d0c666ee883, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_gameDuration: 60
+  hudPrefab: {fileID: 940967955855066710, guid: 9fd4de98c970d694cb14af8634e440e1, type: 3}
