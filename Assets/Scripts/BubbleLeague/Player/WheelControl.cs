@@ -16,10 +16,10 @@ public class WheelControl : MonoBehaviour
         WheelCollider = GetComponent<WheelCollider>();
     }
 
-    void Update()
+    private void Update()
     {
         WheelCollider.GetWorldPose(out position, out rotation);
-       //wheelModel.transform.position = position;
-       //wheelModel.transform.rotation = rotation;
+        wheelModel.transform.position = position;
+        wheelModel.transform.rotation = rotation;
     }
 }

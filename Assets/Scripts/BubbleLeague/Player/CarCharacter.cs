@@ -15,7 +15,6 @@ public class CarCharacter : MonoBehaviour
     private WheelControl[] m_wheels;
     private Rigidbody m_rigidBody;
 
-
     private void OnEnable()
     {
         m_rigidBody = GetComponent<Rigidbody>();
@@ -55,12 +54,8 @@ public class CarCharacter : MonoBehaviour
         m_moveInput = input;
     }
 
-    void Update()
+    private void Update()
     {
-
-        //float vInput = Input.GetAxis("Vertical");
-        //float hInput = Input.GetAxis("Horizontal");
-
         var forwardSpeed = Vector3.Dot(transform.forward, m_rigidBody.linearVelocity);
         var speedFactor = Mathf.InverseLerp(0, m_maxSpeed, forwardSpeed);
         var currentMotorTorque = Mathf.Lerp(m_motorTorque, 0, speedFactor);
@@ -69,15 +64,14 @@ public class CarCharacter : MonoBehaviour
 
         foreach (var wheel in m_wheels)
         {
-            // Apply steering to Wheel colliders that have "Steerable" enabled
             if (wheel.steerable)
             {
+                Debug.Log(m_moveInput.x);
                 wheel.WheelCollider.steerAngle = m_moveInput.x * currentSteerRange;
             }
             
             if (isAccelerating)
             {
-                // Apply torque to Wheel colliders that have "Motorized" enabled
                 if (wheel.motorized)
                 {
                     wheel.WheelCollider.motorTorque = m_moveInput.y * currentMotorTorque;
@@ -86,8 +80,6 @@ public class CarCharacter : MonoBehaviour
             }
             else
             {
-                // If the user is trying to go in the opposite direction
-                // apply brakes to all wheels
                 wheel.WheelCollider.brakeTorque = Mathf.Abs(m_moveInput.y) * m_brakeTorque;
                 wheel.WheelCollider.motorTorque = 0;
             }
