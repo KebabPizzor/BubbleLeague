@@ -94,6 +94,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_sphere: {fileID: 4613042699523928808}
   m_jumpForce: 10
+  m_groundLayer:
+    serializedVersion: 2
+    m_Bits: 64
+  m_groundCheckRadius: 0.51
 --- !u!1 &4613042699523928808
 GameObject:
   m_ObjectHideFlags: 0
