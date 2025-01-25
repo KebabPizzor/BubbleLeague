@@ -62,4 +62,14 @@ public class Player : MonoBehaviour
             _audioSource.PlayOneShot(pickUpSounds[UnityEngine.Random.Range(0, pickUpSounds.Count)]);
         }
     }
+
+    public void MakeAttacker()
+    {
+        gameObject.layer = LayerMask.NameToLayer("Defender");
+    }
+
+    public void MakeDefender()
+    {
+        gameObject.layer = LayerMask.NameToLayer("Attacker");
+    }
 }

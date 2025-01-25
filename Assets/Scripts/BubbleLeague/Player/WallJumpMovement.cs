@@ -50,11 +50,5 @@ namespace BubbleLeague.Player
         {
             return m_rigidbody.GetComponent<SphereCollider>().radius * m_groundCheckMultiplier * m_rigidbody.transform.lossyScale.y;
         }
-
-        private void OnDrawGizmos()
-        {
-            if (m_rigidbody == null) return;
-            Gizmos.DrawSphere(GetGroundCheckPosition(), GetGroundCheckRadius());
-        }
     }
 }

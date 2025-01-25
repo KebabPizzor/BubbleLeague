@@ -38,10 +38,6 @@ public class BallMovement : MonoBehaviour
 
     private void Update()
     {
-        if (m_lookInput.x != 0f)
-        {
-            Debug.Log($"Looking: {m_lookInput.x}");
-        }
         transform.Rotate(Vector3.up * (m_lookInput.x * m_rotationSpeed));
     }
 
@@ -54,7 +50,6 @@ public class BallMovement : MonoBehaviour
     private void FixedUpdate()
     {
         var movementForce = (m_moveInput.y * transform.forward + m_moveInput.x * transform.right).normalized * Mathf.Lerp(m_speed, m_boostSpeed, m_sprintFactor);
-        if(movementForce != Vector3.zero) Debug.Log($"Moving: {movementForce} ({movementForce.magnitude})");
         m_rigidbody.AddForce(movementForce * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
 }
