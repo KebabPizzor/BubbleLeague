@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
-public class CarCharacter : PlayerBase
+using UnityEngine.InputSystem;
+
+public class CarMovement : MonoBehaviour
 {
     //[SerializeField] private InputReader m_inputReader;
     [SerializeField] private float m_motorTorque = 2000.0f;
@@ -13,34 +15,35 @@ public class CarCharacter : PlayerBase
     
     private Vector2 m_moveInput = Vector2.zero;
     private WheelControl[] m_wheels;
+    private Rigidbody m_rigidbody;
+    private float m_sprintFactor;
 
     protected void OnEnable()
     {
-        Initialize();
         m_rigidbody = GetComponent<Rigidbody>();
         m_rigidbody.centerOfMass += Vector3.up * m_centreOfGravityOffset;
         m_wheels = GetComponentsInChildren<WheelControl>();
     }
 
-    private void OnDisable()
+    public void OnSprint(InputValue value)
     {
-        Dispose();
+        m_sprintFactor = value.Get<float>();
     }
 
-    protected override void OnLook(Vector2 input)
+    public void OnLook(InputValue value)
     {
     }
 
-    protected override void OnMove(Vector2 input)
+    public void OnMove(InputValue value)
     {
-        m_moveInput = input;
+        m_moveInput = value.Get<Vector2>();
     }
 
     private void Update()
     {
         var forwardSpeed = Vector3.Dot(transform.forward, m_rigidbody.linearVelocity);
         var speedFactor = Mathf.InverseLerp(0, m_maxSpeed, forwardSpeed);
-        var currentMotorTorque = Mathf.Lerp(m_isBoosting ? m_motorTorque : m_boostMotorTorque, 0, speedFactor);
+        var currentMotorTorque = Mathf.Lerp(Mathf.Lerp(m_motorTorque, m_boostMotorTorque, m_sprintFactor), 0, speedFactor);
         var currentSteerRange = Mathf.Lerp(m_steeringRange, m_steeringRangeAtMaxSpeed, speedFactor);
         var isAccelerating = Mathf.Sign(m_moveInput.y) == Mathf.Sign(forwardSpeed);
 
