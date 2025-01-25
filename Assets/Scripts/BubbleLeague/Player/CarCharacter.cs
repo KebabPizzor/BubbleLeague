@@ -1,9 +1,7 @@
 ﻿using UnityEngine;
-using UnityEngine.Serialization;
-
-public class CarCharacter : MonoBehaviour
+public class CarCharacter : PlayerBase
 {
-    [SerializeField] private InputReader m_inputReader;
+    //[SerializeField] private InputReader m_inputReader;
     [SerializeField] private float m_motorTorque = 2000.0f;
     [SerializeField] private float m_brakeTorque = 2000.0f;
     [SerializeField] private float m_maxSpeed = 20.0f;
@@ -15,41 +13,28 @@ public class CarCharacter : MonoBehaviour
     private WheelControl[] m_wheels;
     private Rigidbody m_rigidBody;
 
-    private void OnEnable()
+    protected void OnEnable()
     {
+        Initialize();
         m_rigidBody = GetComponent<Rigidbody>();
         m_rigidBody.centerOfMass += Vector3.up * m_centreOfGravityOffset;
         m_wheels = GetComponentsInChildren<WheelControl>();
-
-        if (m_inputReader != null)
-        {
-            m_inputReader.Initialize();
-            m_inputReader.MoveEvent += OnMove;
-            m_inputReader.BreakEvent += OnBreak;
-            m_inputReader.LookEvent += OnLook;
-        }
     }
 
     private void OnDisable()
     {
-        if (m_inputReader != null)
-        {
-            m_inputReader.MoveEvent -= OnMove;
-            m_inputReader.BreakEvent -= OnBreak;
-            m_inputReader.LookEvent -= OnLook;
-            m_inputReader.Dispose();
-        }
+        Dispose();
     }
 
-    private void OnLook(Vector2 input)
+    protected override void OnLook(Vector2 input)
     {
     }
 
-    private void OnBreak(bool input)
+    protected override void OnJump(bool input)
     {
     }
 
-    private void OnMove(Vector2 input)
+    protected override void OnMove(Vector2 input)
     {
         m_moveInput = input;
     }
@@ -66,14 +51,15 @@ public class CarCharacter : MonoBehaviour
         {
             if (wheel.steerable)
             {
-                Debug.Log(m_moveInput.x);
-                wheel.WheelCollider.steerAngle = m_moveInput.x * currentSteerRange;
+                
+                wheel.WheelCollider.steerAngle = wheel.isLeftWheel ? m_moveInput.x * currentSteerRange : -m_moveInput.x * currentSteerRange;
+                
             }
-            
+
             if (isAccelerating)
             {
                 if (wheel.motorized)
-                {
+                { 
                     wheel.WheelCollider.motorTorque = m_moveInput.y * currentMotorTorque;
                 }
                 wheel.WheelCollider.brakeTorque = 0;

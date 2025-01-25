@@ -7,7 +7,7 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions
 {
     private GameInput m_gameInput;
     public event UnityAction<Vector2> MoveEvent = delegate { };
-    public event UnityAction<bool> BreakEvent = delegate { };
+    public event UnityAction<bool> JumpEvent = delegate { };
     public event UnityAction<Vector2> LookEvent = delegate { }; 
 
     public void OnMove(InputAction.CallbackContext context)
@@ -20,16 +20,16 @@ public class InputReader : ScriptableObject, GameInput.IGameplayActions
         LookEvent?.Invoke(context.ReadValue<Vector2>());
     }
     
-    public void OnBreak(InputAction.CallbackContext context)
+    public void OnJump(InputAction.CallbackContext context)
     {
         if (context.performed)
         {
-            BreakEvent?.Invoke(true);
+            JumpEvent?.Invoke(true);
         }
 
         if (context.canceled)
         {
-            BreakEvent?.Invoke(false);
+            JumpEvent?.Invoke(false);
         }
     }
 

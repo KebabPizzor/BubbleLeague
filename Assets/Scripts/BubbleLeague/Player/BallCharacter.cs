@@ -1,8 +1,7 @@
 using UnityEngine;
 
-public class BallCharacter : MonoBehaviour
+public class BallCharacter : PlayerBase
 {
-    [SerializeField] protected InputReader m_inputReader;
     [SerializeField] private GameObject m_sphere;
 
     [SerializeField] private float m_speed = 10.0f;
@@ -16,38 +15,26 @@ public class BallCharacter : MonoBehaviour
 
     private void OnEnable()
     {
+        Initialize();
         m_sphereRigidBody = m_sphere.GetComponent<Rigidbody>();
-       if (m_inputReader != null)
-       {
-           m_inputReader.Initialize();
-           m_inputReader.MoveEvent += OnMove;
-           m_inputReader.BreakEvent += OnBreak;
-           m_inputReader.LookEvent += OnLook;
-       }
     }
 
     private void OnDisable()
     {
-        if (m_inputReader != null)
-        {
-            m_inputReader.MoveEvent -= OnMove;
-            m_inputReader.BreakEvent -= OnBreak;
-            m_inputReader.LookEvent -= OnLook;
-            m_inputReader.Dispose();
-        }   
+        Dispose();
     }
 
-    protected void OnBreak(bool input)
+    protected override void OnJump(bool input)
     {
         Debug.Log("PlayerCharacter.OnBreak");
     }
 
-    protected void OnLook(Vector2 input)
+    protected override void OnLook(Vector2 input)
     {
         m_lookInput = input;
     }
 
-    protected void OnMove(Vector2 input)
+    protected override void OnMove(Vector2 input)
     {
         m_moveInput = input;
     }
