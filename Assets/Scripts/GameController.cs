@@ -11,12 +11,12 @@ public class GameController : MonoBehaviour
     [SerializeField] GameObject playerHudPrefab;
     [SerializeField] private Transform defenderSpawnPoint;
     [SerializeField] private Transform attackerSpawnPoint;
-    
+
     private readonly List<Player> _players = new();
     private float m_timer;
     private float? m_player1Score;
     private bool started;
-    
+
     public void StartGame()
     {
         Debug.Log("Start Game!");
@@ -27,7 +27,7 @@ public class GameController : MonoBehaviour
         Time.timeScale = 1f;
         started = true;
     }
-    
+
     public void EndGame()
     {
         if (m_timer < 0) m_timer = 0;
@@ -35,11 +35,11 @@ public class GameController : MonoBehaviour
         Time.timeScale = 0f;
         StartRematch();
     }
-    
+
     public void StartRematch()
     {
         Debug.Log("Start Rematch!");
-        m_timer = m_gameDuration-m_player1Score!.Value;
+        m_timer = m_gameDuration - m_player1Score!.Value;
         MakeDefender(_players[1]);
         MakeAttacker(_players[0]);
         FindFirstObjectByType<Hoop>().Reset();
@@ -57,6 +57,7 @@ public class GameController : MonoBehaviour
             {
                 DrawPlayers();
             }
+
             WinPlayer1();
         }
         else
@@ -130,15 +131,21 @@ public class GameController : MonoBehaviour
     public void RegisterPlayer(Player player)
     {
         _players.Add(player);
-        
+
         var hud = Instantiate(playerHudPrefab).GetComponent<HUD>();
         var canvas = hud.GetComponentInChildren<Canvas>();
         canvas.worldCamera = player.GetComponentInChildren<Camera>();
         hud.Initialize();
         TimerUpdated += hud.UpdateTimer;
-        if(_players.Count == 2) StartGame();
+        
+        var pa = player.GetComponentInChildren<PlayerAttributes>();
+        pa.Initialize();
+        pa.EnergyUpdated += hud.UpdateEnergy;
+        pa.BroadcastEnergy();
+        
+        if (_players.Count == 2) StartGame();
     }
-    
+
     public void MakeAttacker(Player player)
     {
         player.gameObject.layer = LayerMask.NameToLayer("Attacker");

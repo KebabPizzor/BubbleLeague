@@ -46,6 +46,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_timerText: {fileID: 5710551732398964812}
+  m_energySlider: {fileID: 6209731023821573840}
 --- !u!1 &1400977978868980118
 GameObject:
   m_ObjectHideFlags: 0

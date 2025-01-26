@@ -7,7 +7,8 @@ using UnityEngine.Events;
 [RequireComponent(typeof(AudioSource))]
 public class Player : MonoBehaviour
 {
-
+    [SerializeField] private GameObject m_duck;
+    [SerializeField] private GameObject m_frog;
     public float minPitch = 0.9f;
     public float maxPitch = 1.1f;
 
@@ -18,6 +19,12 @@ public class Player : MonoBehaviour
     private AudioSource _audioSource;
     public Color Color { get; set; }
 
+    public void SetCharacter(int character)
+    {
+        m_duck.SetActive(character == 0);
+        m_frog.SetActive(character == 1);
+    }
+    
     void Start()
     {
 
