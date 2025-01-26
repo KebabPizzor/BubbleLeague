@@ -84,6 +84,6 @@ public class BallMovement : MonoBehaviour
 
     public void Reset()
     {
-        m_playerAttributes.Initialize();
+        m_playerAttributes?.Initialize();
     }
 }
