@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using BubbleLeague;
+using GUI;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -131,11 +132,17 @@ public class GameController : MonoBehaviour
     {
         _players.Add(player);
         
+        var cam = player.GetComponentInChildren<Camera>();
         var hud = Instantiate(playerHudPrefab).GetComponent<HUD>();
         var canvas = hud.GetComponentInChildren<Canvas>();
-        canvas.worldCamera = player.GetComponentInChildren<Camera>();
+        canvas.worldCamera = cam;
         hud.Initialize();
         TimerUpdated += hud.UpdateTimer;
+
+        var targetIndicator = hud.GetComponentInChildren<TargetIndicator>();
+        targetIndicator.cam = cam;
+        targetIndicator.target = FindFirstObjectByType<Hoop>().transform;
+        
         if(_players.Count == 2) StartGame();
     }
     
