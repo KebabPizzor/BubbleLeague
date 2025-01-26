@@ -51,6 +51,7 @@ public class BallMovement : MonoBehaviour
     private void Update()
     {
         transform.Rotate(Vector3.up * (m_lookInput.x * m_rotationSpeed) + Vector3.left * (m_lookInput.y * m_rotationSpeed));
+        transform.rotation = Quaternion.LookRotation(transform.forward, Vector3.up);
         UpdateEnergy();
     }
 
