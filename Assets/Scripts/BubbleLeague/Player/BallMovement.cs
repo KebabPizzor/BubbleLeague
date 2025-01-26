@@ -52,4 +52,9 @@ public class BallMovement : MonoBehaviour
         var movementForce = (m_moveInput.y * transform.forward + m_moveInput.x * transform.right).normalized * Mathf.Lerp(m_speed, m_boostSpeed, m_sprintFactor);
         m_rigidbody.AddForce(movementForce * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
+
+    public void OnPowerUpCollected()
+    {
+        Debug.Log("Power Up Collected.");
+    }
 }
