@@ -27,6 +27,11 @@ public class PlayerAttributes : MonoBehaviour
         EnergyUpdated?.Invoke(m_currentEnergy);
         return m_currentEnergy;
     }
+    
+    public bool IsAtMaxEnergy()
+    {
+        return m_currentEnergy >= m_maxEnergy;
+    }
 
     public void BroadcastEnergy()
     {

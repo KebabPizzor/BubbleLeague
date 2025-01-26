@@ -13,10 +13,15 @@ public class BallMovement : MonoBehaviour
 
     private Vector2 m_moveInput;
     private Vector2 m_lookInput;
-    private float m_sprintFactor;
     private Rigidbody m_rigidbody;
     private PlayerAttributes m_playerAttributes;
+
+    //Sprint
+    private float m_sprintFactor;
     private bool m_isSprinting;
+    private float m_energyRegenTimer = 2.0f;
+    private float m_energyRegenCurrentTimer = 0.0f;
+    private bool m_shouldRegenEnergy = true;
 
     private void Awake()
     {
@@ -34,6 +39,12 @@ public class BallMovement : MonoBehaviour
 
         m_sprintFactor = sprintForce;
         m_isSprinting = sprintForce > 0;
+        m_shouldRegenEnergy = false;
+
+        if (sprintForce <= 0)
+        {
+            m_energyRegenCurrentTimer = m_energyRegenTimer;
+        }
     }
 
     public void OnLook(Vector2 value)
@@ -49,9 +60,30 @@ public class BallMovement : MonoBehaviour
     private void Update()
     {
         transform.Rotate(Vector3.up * (m_lookInput.x * m_rotationSpeed));
+        UpdateEnergy();
+    }
+
+    private void UpdateEnergy()
+    {
         if (m_isSprinting)
         {
             m_playerAttributes.ChangeEnergy(-Time.deltaTime * m_energyDrainSpeed);
+            return;
+        }
+
+        if (m_playerAttributes.IsAtMaxEnergy())
+            return;
+
+        if (m_shouldRegenEnergy)
+        {
+            m_playerAttributes.ChangeEnergy(Time.deltaTime * m_energyDrainSpeed);
+            return;
+        }
+
+        m_energyRegenCurrentTimer -= Time.deltaTime;
+        if (m_energyRegenCurrentTimer <= 0)
+        {
+            m_shouldRegenEnergy = true;
         }
     }
 
@@ -63,7 +95,8 @@ public class BallMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        var movementForce = (m_moveInput.y * transform.forward + m_moveInput.x * transform.right).normalized * Mathf.Lerp(m_speed, m_boostSpeed, m_sprintFactor);
+        var movementForce = (m_moveInput.y * transform.forward + m_moveInput.x * transform.right).normalized *
+                            Mathf.Lerp(m_speed, m_boostSpeed, m_sprintFactor);
         m_rigidbody.AddForce(movementForce * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
 
