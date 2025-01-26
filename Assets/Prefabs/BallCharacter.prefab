@@ -56,6 +56,7 @@ MonoBehaviour:
   m_camera: {fileID: 7309151439647299642}
   m_speed: 400
   m_boostSpeed: 800
+  m_energyDrainSpeed: 10
   m_rotationSpeed: 0.33
 --- !u!54 &5576232344139377045
 Rigidbody:
@@ -156,6 +157,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f69b53307d646629e35546227b650bf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  m_maxEnergy: 100
 --- !u!1 &4613042699523928808
 GameObject:
   m_ObjectHideFlags: 0
@@ -477,8 +479,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e1f14b2429f13514d896d29f964d0a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  m_duck: {fileID: 955157078345669277}
-  m_frog: {fileID: 6155914675300586958}
+  duck: {fileID: 955157078345669277}
+  frog: {fileID: 6155914675300586958}
   minPitch: 0.9
   maxPitch: 1.1
   playerHitSounds:
@@ -487,6 +489,7 @@ MonoBehaviour:
   - {fileID: 8300000, guid: b83cbb4001263594c90e6e1b7ee9e4bd, type: 3}
   sinkHitSounds: []
   pickUpSounds: []
+  hudRef: {fileID: 0}
 --- !u!114 &8181325527385391629
 MonoBehaviour:
   m_ObjectHideFlags: 0

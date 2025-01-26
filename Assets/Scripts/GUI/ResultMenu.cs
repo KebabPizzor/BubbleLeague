@@ -7,9 +7,12 @@ public class ResultMenu : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI m_resultText;
     [SerializeField] private Button m_rematchButton;
-    
-    public void Initialize(GameController.Result result)
+    [SerializeField] private Button m_quitButton;
+
+    public void Initialize(GameController.Result result, GameController gameController)
     {
+        Cursor.lockState = CursorLockMode.None;
+        Cursor.visible = true;
         switch (result)
         {
             case GameController.Result.Player1:
@@ -22,10 +25,8 @@ public class ResultMenu : MonoBehaviour
                 m_resultText.text = "Draw!";
                 break;
         }
-        
-        m_rematchButton.onClick.AddListener(() =>
-        {
-            SceneManager.LoadScene("Test");
-        });
+
+        m_rematchButton.onClick.AddListener(() => { SceneManager.LoadScene("Test"); });
+        m_quitButton.onClick.AddListener(() => { gameController.QuitGame(); });
     }
 }

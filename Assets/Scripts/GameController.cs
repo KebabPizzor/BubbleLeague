@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using BubbleLeague;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameController : MonoBehaviour
 {
@@ -20,18 +21,29 @@ public class GameController : MonoBehaviour
     
     public event Action<float> TimerUpdated;
     [SerializeField] private float m_gameDuration = 60.0f;
-    [SerializeField] GameObject playerHudPrefab;
-    [SerializeField] private GameObject resultMenuPrefab;
     [SerializeField] private Transform defenderSpawnPoint;
     [SerializeField] private Transform attackerSpawnPoint;
+    
+    //GUI
+    [SerializeField] private GameObject m_playerHudPrefab;
+    [SerializeField] private GameObject m_resultMenuPrefab;
+    [SerializeField] private GameObject m_mainMenuPrefab;
+    
 
     private readonly List<Player> _players = new();
     private float m_timer;
     private float? m_player1Score;
     private bool started;
+    private GameObject m_startMenuRef;
+    
+    private void Awake()
+    {
+        m_startMenuRef = Instantiate(m_mainMenuPrefab);
+    }
 
     public void StartGame()
     {
+        Destroy(m_startMenuRef);
         Debug.Log("Start Game!");
         m_timer = m_gameDuration;
         MakeDefender(_players[0]);
@@ -117,33 +129,30 @@ public class GameController : MonoBehaviour
     private void DrawPlayers()
     {
         ShowResult(Result.Draw);
-        //QuitGame();
     }
     
     private void WinPlayer1()
     {
        
         ShowResult(Result.Player1);
-        //QuitGame();
     }
 
 
     private void WinPlayer2()
     {
         ShowResult(Result.Player2);
-        //QuitGame();
     }
 
     private void ShowResult(Result result)
     {
-        var resultMenu = Instantiate(resultMenuPrefab).GetComponent<ResultMenu>();
-        resultMenu.Initialize(result);
+        var resultMenu = Instantiate(m_resultMenuPrefab).GetComponent<ResultMenu>();
+        resultMenu.Initialize(result, this);
         foreach (var player in _players)
         {
             player.gameObject.SetActive(false);
         }
     }
-    private void QuitGame()
+    public void QuitGame()
     {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.ExitPlaymode();
@@ -156,7 +165,7 @@ public class GameController : MonoBehaviour
     {
         _players.Add(player);
 
-        var hud = Instantiate(playerHudPrefab).GetComponent<HUD>();
+        var hud = Instantiate(m_playerHudPrefab).GetComponent<HUD>();
         var canvas = hud.GetComponentInChildren<Canvas>();
         canvas.worldCamera = player.GetComponentInChildren<Camera>();
         TimerUpdated += hud.UpdateTimer;

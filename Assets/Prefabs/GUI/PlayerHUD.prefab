@@ -122,7 +122,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_timerText: {fileID: 5710551732398964812}
-  m_roleText: {fileID: 0}
+  m_roleText: {fileID: 3641999285640454989}
   m_energySlider: {fileID: 6209731023821573840}
 --- !u!1 &1400977978868980118
 GameObject:

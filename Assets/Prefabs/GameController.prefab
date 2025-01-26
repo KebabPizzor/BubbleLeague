@@ -156,7 +156,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_gameDuration: 60
-  playerHudPrefab: {fileID: 0}
-  resultMenuPrefab: {fileID: 2834369623324994283, guid: 0905a18ea7279294ea3da8cd2c76c9d5, type: 3}
   defenderSpawnPoint: {fileID: 0}
   attackerSpawnPoint: {fileID: 0}
+  m_playerHudPrefab: {fileID: 940967955855066710, guid: 9fd4de98c970d694cb14af8634e440e1, type: 3}
+  m_resultMenuPrefab: {fileID: 2834369623324994283, guid: 0905a18ea7279294ea3da8cd2c76c9d5, type: 3}
+  m_mainMenuPrefab: {fileID: 2834369623324994283, guid: 551257b76ac896347b45d4beed78bc38, type: 3}
