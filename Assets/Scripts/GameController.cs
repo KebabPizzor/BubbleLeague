@@ -2,13 +2,19 @@ using System;
 using System.Collections.Generic;
 using BubbleLeague;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 public class GameController : MonoBehaviour
 {
+    public enum Result
+    {
+        Player1,
+        Player2,
+        Draw
+    }
     public event Action<float> TimerUpdated;
     [SerializeField] private float m_gameDuration = 60.0f;
     [SerializeField] GameObject playerHudPrefab;
+    [SerializeField] private GameObject resultMenuPrefab;
     [SerializeField] private Transform defenderSpawnPoint;
     [SerializeField] private Transform attackerSpawnPoint;
 
@@ -66,12 +72,6 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void DrawPlayers()
-    {
-        Debug.Log("Draw between both players.");
-        QuitGame();
-    }
-
     private void Update()
     {
         if (!started) return;
@@ -106,19 +106,36 @@ public class GameController : MonoBehaviour
             EndRematch();
         }
     }
-
-    private void WinPlayer1()
+    
+    private void DrawPlayers()
     {
-        Debug.Log("Player 1 Wins.");
+        ShowResult(Result.Draw);
         QuitGame();
     }
+    
+    private void WinPlayer1()
+    {
+       
+        ShowResult(Result.Player1);
+        //QuitGame();
+    }
+
 
     private void WinPlayer2()
     {
-        Debug.Log("Player 2 Wins.");
-        QuitGame();
+        ShowResult(Result.Player2);
+        //QuitGame();
     }
 
+    private void ShowResult(Result result)
+    {
+        var resultMenu = Instantiate(resultMenuPrefab).GetComponent<ResultMenu>();
+        resultMenu.Initialize(result);
+        foreach (var player in _players)
+        {
+            player.gameObject.SetActive(false);
+        }
+    }
     private void QuitGame()
     {
 #if UNITY_EDITOR

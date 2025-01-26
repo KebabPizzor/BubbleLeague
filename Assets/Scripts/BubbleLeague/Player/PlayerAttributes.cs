@@ -12,7 +12,7 @@ public class PlayerAttributes : MonoBehaviour
         m_currentEnergy = m_maxEnergy;
     }
 
-    public float ChangeEnergy(float amount)
+    public void ChangeEnergy(float amount)
     {
         m_currentEnergy += amount;
         if (m_currentEnergy > m_maxEnergy)
@@ -25,9 +25,13 @@ public class PlayerAttributes : MonoBehaviour
         }
 
         EnergyUpdated?.Invoke(m_currentEnergy);
-        return m_currentEnergy;
     }
-    
+
+    public void RefillEnergy()
+    {
+        ChangeEnergy(m_maxEnergy / 2);
+    }
+
     public bool IsAtMaxEnergy()
     {
         return m_currentEnergy >= m_maxEnergy;
@@ -37,7 +41,7 @@ public class PlayerAttributes : MonoBehaviour
     {
         EnergyUpdated?.Invoke(m_currentEnergy);
     }
-    
+
     public float GetCurrentEnergy()
     {
         return m_currentEnergy;
