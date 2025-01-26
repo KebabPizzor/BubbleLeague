@@ -74,6 +74,7 @@ public class BallMovement : MonoBehaviour
 
     public void OnPowerUpCollected()
     {
+        GetComponentInParent<Player>().PlayPickUpSound();
         m_playerAttributes.RefillEnergy();
     }
 }

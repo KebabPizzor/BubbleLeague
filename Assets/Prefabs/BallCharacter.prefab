@@ -483,12 +483,15 @@ MonoBehaviour:
   frog: {fileID: 6155914675300586958}
   minPitch: 0.9
   maxPitch: 1.1
-  playerHitSounds:
-  - {fileID: 8300000, guid: 310b9972b6a1bd4409e6c93659c3b9a8, type: 3}
-  - {fileID: 8300000, guid: 310b9972b6a1bd4409e6c93659c3b9a8, type: 3}
-  - {fileID: 8300000, guid: b83cbb4001263594c90e6e1b7ee9e4bd, type: 3}
-  sinkHitSounds: []
-  pickUpSounds: []
+  TargetIndicator: {fileID: 0}
+  playerSoftHitSounds:
+  - {fileID: 8300000, guid: e1d59254b05bef54d8d805bffbd7dfb3, type: 3}
+  playerHeavyHitSounds:
+  - {fileID: 8300000, guid: e58e51e3ad7a3e043bacb4aa3c349b8b, type: 3}
+  sinkHitSounds:
+  - {fileID: 8300000, guid: e1d59254b05bef54d8d805bffbd7dfb3, type: 3}
+  pickUpSounds:
+  - {fileID: 8300000, guid: 4a3b04fd6dfa63d40ae96f8e4d44e041, type: 3}
   hudRef: {fileID: 0}
 --- !u!114 &8181325527385391629
 MonoBehaviour:
