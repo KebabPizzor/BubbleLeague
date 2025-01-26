@@ -295,7 +295,7 @@ Canvas:
   m_GameObject: {fileID: 2834369623324994283}
   m_Enabled: 1
   serializedVersion: 3
-  m_RenderMode: 1
+  m_RenderMode: 0
   m_Camera: {fileID: 0}
   m_PlaneDistance: 100
   m_PixelPerfect: 0
@@ -307,7 +307,7 @@ Canvas:
   m_AdditionalShaderChannelsFlag: 25
   m_UpdateRectTransformForStandalone: 0
   m_SortingLayerID: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 4000
   m_TargetDisplay: 0
 --- !u!114 &6752084001996544872
 MonoBehaviour:
@@ -449,7 +449,6 @@ GameObject:
   m_Component:
   - component: {fileID: 326655755596950102}
   - component: {fileID: 931811834102871238}
-  - component: {fileID: 6476609085308222230}
   - component: {fileID: 8746948414170672659}
   m_Layer: 0
   m_Name: Camera
@@ -528,14 +527,6 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
---- !u!81 &6476609085308222230
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5427535462530324329}
-  m_Enabled: 1
 --- !u!114 &8746948414170672659
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -18,24 +18,24 @@ public class GameController : MonoBehaviour
         Attacker,
         Defender
     }
-    
+
     public event Action<float> TimerUpdated;
     [SerializeField] private float m_gameDuration = 60.0f;
     [SerializeField] private Transform defenderSpawnPoint;
     [SerializeField] private Transform attackerSpawnPoint;
-    
+
     //GUI
     [SerializeField] private GameObject m_playerHudPrefab;
     [SerializeField] private GameObject m_resultMenuPrefab;
     [SerializeField] private GameObject m_mainMenuPrefab;
-    
+
 
     private readonly List<Player> _players = new();
     private float m_timer;
     private float? m_player1Score;
     private bool started;
     private GameObject m_startMenuRef;
-    
+
     private void Awake()
     {
         m_startMenuRef = Instantiate(m_mainMenuPrefab);
@@ -125,15 +125,14 @@ public class GameController : MonoBehaviour
             EndRematch();
         }
     }
-    
+
     private void DrawPlayers()
     {
         ShowResult(Result.Draw);
     }
-    
+
     private void WinPlayer1()
     {
-       
         ShowResult(Result.Player1);
     }
 
@@ -147,11 +146,9 @@ public class GameController : MonoBehaviour
     {
         var resultMenu = Instantiate(m_resultMenuPrefab).GetComponent<ResultMenu>();
         resultMenu.Initialize(result, this);
-        foreach (var player in _players)
-        {
-            player.gameObject.SetActive(false);
-        }
+        
     }
+
     public void QuitGame()
     {
 #if UNITY_EDITOR
@@ -170,12 +167,12 @@ public class GameController : MonoBehaviour
         canvas.worldCamera = player.GetComponentInChildren<Camera>();
         TimerUpdated += hud.UpdateTimer;
         player.hudRef = hud;
-        
+
         var pa = player.GetComponentInChildren<PlayerAttributes>();
         pa.Initialize();
         pa.EnergyUpdated += hud.UpdateEnergy;
         pa.BroadcastEnergy();
-        
+
         if (_players.Count == 2) StartGame();
     }
 
