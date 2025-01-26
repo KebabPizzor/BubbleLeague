@@ -6,6 +6,7 @@ public class InputReader : MonoBehaviour
 {
     public UnityEvent<Vector2> MoveEvent;
     public UnityEvent JumpEvent;
+    public UnityEvent PauseEvent;
     public UnityEvent<Vector2> LookEvent; 
     public UnityEvent<float> SprintEvent; 
 
@@ -28,5 +29,10 @@ public class InputReader : MonoBehaviour
     {
         Debug.Log("Trying to Jump.");
         JumpEvent?.Invoke();
+    }
+    
+    public void OnPause(InputValue _)
+    {
+        PauseEvent?.Invoke();
     }
 }
