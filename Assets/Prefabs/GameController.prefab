@@ -172,6 +172,7 @@ MonoBehaviour:
   timeUpSounds:
   - {fileID: 8300000, guid: 78e42db279ef3e94d8047db1db96ff98, type: 3}
   gameStartSounds: []
+  startCountDownSoundAt: 6
 --- !u!82 &4066927059517000769
 AudioSource:
   m_ObjectHideFlags: 0
