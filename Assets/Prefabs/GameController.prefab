@@ -168,10 +168,11 @@ MonoBehaviour:
   countdownSounds:
   - {fileID: 8300000, guid: 17cf6d94e2040654db08a4abd0617c5b, type: 3}
   hoopSounds:
-  - {fileID: 8300000, guid: b7c070eea8803424f91e2b320a11fdd3, type: 3}
+  - {fileID: 8300000, guid: 15210e0a95991934c8cfa854b524d84c, type: 3}
   timeUpSounds:
   - {fileID: 8300000, guid: 78e42db279ef3e94d8047db1db96ff98, type: 3}
-  gameStartSounds: []
+  gameStartSounds:
+  - {fileID: 8300000, guid: db2a4d57f9058fd4db0f2a276b0c5afc, type: 3}
   startCountDownSoundAt: 6
 --- !u!82 &4066927059517000769
 AudioSource:

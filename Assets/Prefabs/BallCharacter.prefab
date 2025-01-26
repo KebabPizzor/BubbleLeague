@@ -588,7 +588,10 @@ MonoBehaviour:
   playerHeavyHitSounds:
   - {fileID: 8300000, guid: e58e51e3ad7a3e043bacb4aa3c349b8b, type: 3}
   sinkHitSounds:
-  - {fileID: 8300000, guid: e1d59254b05bef54d8d805bffbd7dfb3, type: 3}
+  - {fileID: 8300000, guid: b76e0436602f8424f90054eeff732d6d, type: 3}
+  - {fileID: 8300000, guid: 427d111047e8a3c4d84fa1388688cf53, type: 3}
+  - {fileID: 8300000, guid: 36052fd8946e6794282e35a3e52ec4ed, type: 3}
+  - {fileID: 8300000, guid: c888aac87dbaec94c8f6893130d6e601, type: 3}
   pickUpSounds:
   - {fileID: 8300000, guid: 4a3b04fd6dfa63d40ae96f8e4d44e041, type: 3}
   hudRef: {fileID: 0}
