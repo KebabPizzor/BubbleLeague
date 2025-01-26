@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BubbleLeague;
 using GUI;
 using UnityEngine;
@@ -140,6 +141,7 @@ public class GameController : MonoBehaviour
         TimerUpdated += hud.UpdateTimer;
 
         var targetIndicator = hud.GetComponentInChildren<TargetIndicator>();
+        player.TargetIndicator = targetIndicator;
         targetIndicator.cam = cam;
         targetIndicator.target = FindFirstObjectByType<Hoop>().transform;
         
@@ -151,6 +153,7 @@ public class GameController : MonoBehaviour
         player.gameObject.layer = LayerMask.NameToLayer("Attacker");
         player.transform.position = attackerSpawnPoint.position;
         player.GetComponentInChildren<BallMovement>().transform.rotation = attackerSpawnPoint.rotation;
+        player.TargetIndicator.target = FindFirstObjectByType<Hoop>().transform;
         player.Reset();
     }
 
@@ -159,6 +162,7 @@ public class GameController : MonoBehaviour
         player.gameObject.layer = LayerMask.NameToLayer("Defender");
         player.transform.position = defenderSpawnPoint.position;
         player.GetComponentInChildren<BallMovement>().transform.rotation = defenderSpawnPoint.rotation;
+        player.TargetIndicator.target = _players.FirstOrDefault(it => it != player)?.transform;
         player.Reset();
     }
 

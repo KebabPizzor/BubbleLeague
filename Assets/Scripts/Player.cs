@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using GUI;
 using UnityEngine;
 using UnityEngine.Events;
 
@@ -10,6 +11,7 @@ public class Player : MonoBehaviour
 
     public float minPitch = 0.9f;
     public float maxPitch = 1.1f;
+    public TargetIndicator TargetIndicator;
 
     public List<AudioClip> playerHitSounds;
     public List<AudioClip> sinkHitSounds;
