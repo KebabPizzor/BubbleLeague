@@ -11,6 +11,13 @@ public class GameController : MonoBehaviour
         Player2,
         Draw
     }
+
+    public enum Role
+    {
+        Attacker,
+        Defender
+    }
+    
     public event Action<float> TimerUpdated;
     [SerializeField] private float m_gameDuration = 60.0f;
     [SerializeField] GameObject playerHudPrefab;
@@ -110,7 +117,7 @@ public class GameController : MonoBehaviour
     private void DrawPlayers()
     {
         ShowResult(Result.Draw);
-        QuitGame();
+        //QuitGame();
     }
     
     private void WinPlayer1()
@@ -152,8 +159,8 @@ public class GameController : MonoBehaviour
         var hud = Instantiate(playerHudPrefab).GetComponent<HUD>();
         var canvas = hud.GetComponentInChildren<Canvas>();
         canvas.worldCamera = player.GetComponentInChildren<Camera>();
-        hud.Initialize();
         TimerUpdated += hud.UpdateTimer;
+        player.hudRef = hud;
         
         var pa = player.GetComponentInChildren<PlayerAttributes>();
         pa.Initialize();
@@ -169,6 +176,7 @@ public class GameController : MonoBehaviour
         player.transform.position = attackerSpawnPoint.position;
         player.GetComponentInChildren<BallMovement>().transform.rotation = attackerSpawnPoint.rotation;
         player.Reset();
+        player.hudRef.SetRole(Role.Attacker);
     }
 
     public void MakeDefender(Player player)
@@ -177,6 +185,7 @@ public class GameController : MonoBehaviour
         player.transform.position = defenderSpawnPoint.position;
         player.GetComponentInChildren<BallMovement>().transform.rotation = defenderSpawnPoint.rotation;
         player.Reset();
+        player.hudRef.SetRole(Role.Defender);
     }
 
     public void UnregisterPlayer(Player player)
