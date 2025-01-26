@@ -97,5 +97,6 @@ public class Player : MonoBehaviour
     {
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+        GetComponentInChildren<BallMovement>().Reset();
     }
 }

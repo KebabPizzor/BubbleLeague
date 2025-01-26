@@ -31,7 +31,7 @@ public class PlayerAttributes : MonoBehaviour
     {
         ChangeEnergy(m_maxEnergy / 2);
     }
-
+    
     public bool IsAtMaxEnergy()
     {
         return m_currentEnergy >= m_maxEnergy;
