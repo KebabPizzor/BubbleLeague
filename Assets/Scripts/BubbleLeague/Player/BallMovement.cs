@@ -11,6 +11,8 @@ public class BallMovement : MonoBehaviour
     [SerializeField] private float m_energyDrainSpeed = 10.0f;
     [Range(0.01f, 1.0f)] [SerializeField] private float m_rotationSpeed;
 
+    [SerializeField] private AudioSource chargeSFX;
+    
     private Vector2 m_moveInput;
     private Vector2 m_lookInput;
     private Rigidbody m_rigidbody;
@@ -28,14 +30,8 @@ public class BallMovement : MonoBehaviour
 
     public void OnSprint(float sprintForce)
     {
-        if (m_playerAttributes.GetCurrentEnergy() <= 0)
-        {
-            m_isSprinting = false;
-            return;
-        }
-
         m_sprintFactor = sprintForce;
-        m_isSprinting = sprintForce > 0;
+        m_isSprinting = m_sprintFactor > 0f;
     }
 
     public void OnLook(Vector2 value)
@@ -50,6 +46,13 @@ public class BallMovement : MonoBehaviour
 
     private void Update()
     {
+        if (chargeSFX.isPlaying && !m_isSprinting || m_playerAttributes.GetCurrentEnergy() <= 0f)
+        {
+            chargeSFX.Stop();
+        } else if (!chargeSFX.isPlaying && m_isSprinting && m_playerAttributes.GetCurrentEnergy() > 0f)
+        {
+            chargeSFX.Play();
+        }
         transform.Rotate(Vector3.up * (m_lookInput.x * m_rotationSpeed) + Vector3.left * (m_lookInput.y * m_rotationSpeed));
         transform.rotation = Quaternion.LookRotation(transform.forward, Vector3.up);
         UpdateEnergy();
@@ -69,7 +72,7 @@ public class BallMovement : MonoBehaviour
     private void FixedUpdate()
     {
         var movementForce = (m_moveInput.y * transform.forward + m_moveInput.x * transform.right).normalized *
-                            Mathf.Lerp(m_speed, m_boostSpeed, m_sprintFactor);
+                            Mathf.Lerp(m_speed, m_boostSpeed, m_playerAttributes.GetCurrentEnergy() > 0f ? m_sprintFactor : 0f);
         m_rigidbody.AddForce(movementForce * Time.fixedDeltaTime, ForceMode.Acceleration);
     }
 
@@ -77,5 +80,10 @@ public class BallMovement : MonoBehaviour
     {
         GetComponentInParent<Player>().PlayPickUpSound();
         m_playerAttributes.RefillEnergy();
+    }
+
+    public void Reset()
+    {
+        m_playerAttributes.Initialize();
     }
 }
