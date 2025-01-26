@@ -34,16 +34,15 @@ public class GameController : MonoBehaviour
     private float m_timer;
     private float? m_player1Score;
     private bool started;
-    private GameObject m_startMenuRef;
+    private GameObject m_mainMenuRef;
 
     private void Awake()
     {
-        m_startMenuRef = Instantiate(m_mainMenuPrefab);
+        m_mainMenuRef = Instantiate(m_mainMenuPrefab);
     }
 
     public void StartGame()
     {
-        Destroy(m_startMenuRef);
         Debug.Log("Start Game!");
         m_timer = m_gameDuration;
         MakeDefender(_players[0]);
@@ -160,6 +159,7 @@ public class GameController : MonoBehaviour
 
     public void RegisterPlayer(Player player)
     {
+        if(m_mainMenuRef != null) Destroy(m_mainMenuRef);
         _players.Add(player);
 
         var hud = Instantiate(m_playerHudPrefab).GetComponent<HUD>();
