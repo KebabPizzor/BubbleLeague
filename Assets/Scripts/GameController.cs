@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using BubbleLeague;
+using GUI;
 using UnityEngine;
 using UnityEngine.Serialization;
 
@@ -161,10 +163,10 @@ public class GameController : MonoBehaviour
     {
         if(m_mainMenuRef != null) Destroy(m_mainMenuRef);
         _players.Add(player);
-
+        var cam = player.GetComponentInChildren<Camera>();
         var hud = Instantiate(m_playerHudPrefab).GetComponent<HUD>();
         var canvas = hud.GetComponentInChildren<Canvas>();
-        canvas.worldCamera = player.GetComponentInChildren<Camera>();
+        canvas.worldCamera = cam;
         TimerUpdated += hud.UpdateTimer;
         player.hudRef = hud;
 
@@ -172,6 +174,11 @@ public class GameController : MonoBehaviour
         pa.Initialize();
         pa.EnergyUpdated += hud.UpdateEnergy;
         pa.BroadcastEnergy();
+
+        var targetIndicator = hud.GetComponentInChildren<TargetIndicator>();
+        player.TargetIndicator = targetIndicator;
+        targetIndicator.cam = cam;
+        targetIndicator.target = FindFirstObjectByType<Hoop>().transform;
 
         if (_players.Count == 2) StartGame();
     }
@@ -181,6 +188,7 @@ public class GameController : MonoBehaviour
         player.gameObject.layer = LayerMask.NameToLayer("Attacker");
         player.transform.position = attackerSpawnPoint.position;
         player.GetComponentInChildren<BallMovement>().transform.rotation = attackerSpawnPoint.rotation;
+        player.TargetIndicator.target = FindFirstObjectByType<Hoop>().transform;
         player.Reset();
         player.hudRef.SetRole(Role.Attacker);
     }
@@ -190,6 +198,7 @@ public class GameController : MonoBehaviour
         player.gameObject.layer = LayerMask.NameToLayer("Defender");
         player.transform.position = defenderSpawnPoint.position;
         player.GetComponentInChildren<BallMovement>().transform.rotation = defenderSpawnPoint.rotation;
+        player.TargetIndicator.target = _players.FirstOrDefault(it => it != player)?.transform;
         player.Reset();
         player.hudRef.SetRole(Role.Defender);
     }
