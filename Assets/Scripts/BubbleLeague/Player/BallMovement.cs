@@ -19,9 +19,6 @@ public class BallMovement : MonoBehaviour
     //Sprint
     private float m_sprintFactor;
     private bool m_isSprinting;
-    private float m_energyRegenTimer = 2.0f;
-    private float m_energyRegenCurrentTimer = 0.0f;
-    private bool m_shouldRegenEnergy = true;
 
     private void Awake()
     {
@@ -39,12 +36,6 @@ public class BallMovement : MonoBehaviour
 
         m_sprintFactor = sprintForce;
         m_isSprinting = sprintForce > 0;
-        m_shouldRegenEnergy = false;
-
-        if (sprintForce <= 0)
-        {
-            m_energyRegenCurrentTimer = m_energyRegenTimer;
-        }
     }
 
     public void OnLook(Vector2 value)
@@ -66,25 +57,7 @@ public class BallMovement : MonoBehaviour
     private void UpdateEnergy()
     {
         if (m_isSprinting)
-        {
             m_playerAttributes.ChangeEnergy(-Time.deltaTime * m_energyDrainSpeed);
-            return;
-        }
-
-        if (m_playerAttributes.IsAtMaxEnergy())
-            return;
-
-        if (m_shouldRegenEnergy)
-        {
-            m_playerAttributes.ChangeEnergy(Time.deltaTime * m_energyDrainSpeed);
-            return;
-        }
-
-        m_energyRegenCurrentTimer -= Time.deltaTime;
-        if (m_energyRegenCurrentTimer <= 0)
-        {
-            m_shouldRegenEnergy = true;
-        }
     }
 
     private void LateUpdate()
@@ -102,6 +75,6 @@ public class BallMovement : MonoBehaviour
 
     public void OnPowerUpCollected()
     {
-        Debug.Log("Power Up Collected.");
+        m_playerAttributes.RefillEnergy();
     }
 }

@@ -6,19 +6,44 @@ using UnityEngine.Serialization;
 
 public class GameController : MonoBehaviour
 {
+    public enum Result
+    {
+        Player1,
+        Player2,
+        Draw
+    }
+
+    public enum Role
+    {
+        Attacker,
+        Defender
+    }
+    
     public event Action<float> TimerUpdated;
     [SerializeField] private float m_gameDuration = 60.0f;
-    [SerializeField] GameObject playerHudPrefab;
     [SerializeField] private Transform defenderSpawnPoint;
     [SerializeField] private Transform attackerSpawnPoint;
+    
+    //GUI
+    [SerializeField] private GameObject m_playerHudPrefab;
+    [SerializeField] private GameObject m_resultMenuPrefab;
+    [SerializeField] private GameObject m_mainMenuPrefab;
+    
 
     private readonly List<Player> _players = new();
     private float m_timer;
     private float? m_player1Score;
     private bool started;
+    private GameObject m_startMenuRef;
+    
+    private void Awake()
+    {
+        m_startMenuRef = Instantiate(m_mainMenuPrefab);
+    }
 
     public void StartGame()
     {
+        Destroy(m_startMenuRef);
         Debug.Log("Start Game!");
         m_timer = m_gameDuration;
         MakeDefender(_players[0]);
@@ -66,12 +91,6 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void DrawPlayers()
-    {
-        Debug.Log("Draw between both players.");
-        QuitGame();
-    }
-
     private void Update()
     {
         if (!started) return;
@@ -106,20 +125,34 @@ public class GameController : MonoBehaviour
             EndRematch();
         }
     }
-
+    
+    private void DrawPlayers()
+    {
+        ShowResult(Result.Draw);
+    }
+    
     private void WinPlayer1()
     {
-        Debug.Log("Player 1 Wins.");
-        QuitGame();
+       
+        ShowResult(Result.Player1);
     }
+
 
     private void WinPlayer2()
     {
-        Debug.Log("Player 2 Wins.");
-        QuitGame();
+        ShowResult(Result.Player2);
     }
 
-    private void QuitGame()
+    private void ShowResult(Result result)
+    {
+        var resultMenu = Instantiate(m_resultMenuPrefab).GetComponent<ResultMenu>();
+        resultMenu.Initialize(result, this);
+        foreach (var player in _players)
+        {
+            player.gameObject.SetActive(false);
+        }
+    }
+    public void QuitGame()
     {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.ExitPlaymode();
@@ -132,11 +165,11 @@ public class GameController : MonoBehaviour
     {
         _players.Add(player);
 
-        var hud = Instantiate(playerHudPrefab).GetComponent<HUD>();
+        var hud = Instantiate(m_playerHudPrefab).GetComponent<HUD>();
         var canvas = hud.GetComponentInChildren<Canvas>();
         canvas.worldCamera = player.GetComponentInChildren<Camera>();
-        hud.Initialize();
         TimerUpdated += hud.UpdateTimer;
+        player.hudRef = hud;
         
         var pa = player.GetComponentInChildren<PlayerAttributes>();
         pa.Initialize();
@@ -152,6 +185,7 @@ public class GameController : MonoBehaviour
         player.transform.position = attackerSpawnPoint.position;
         player.GetComponentInChildren<BallMovement>().transform.rotation = attackerSpawnPoint.rotation;
         player.Reset();
+        player.hudRef.SetRole(Role.Attacker);
     }
 
     public void MakeDefender(Player player)
@@ -160,6 +194,7 @@ public class GameController : MonoBehaviour
         player.transform.position = defenderSpawnPoint.position;
         player.GetComponentInChildren<BallMovement>().transform.rotation = defenderSpawnPoint.rotation;
         player.Reset();
+        player.hudRef.SetRole(Role.Defender);
     }
 
     public void UnregisterPlayer(Player player)
