@@ -14,7 +14,8 @@ public class Player : MonoBehaviour
     public float maxPitch = 1.1f;
     public TargetIndicator TargetIndicator;
 
-    public List<AudioClip> playerHitSounds;
+    public List<AudioClip> playerSoftHitSounds;
+    public List<AudioClip> playerHeavyHitSounds;
     public List<AudioClip> sinkHitSounds;
     public List<AudioClip> pickUpSounds;
     public HUD hudRef;
@@ -36,21 +37,36 @@ public class Player : MonoBehaviour
         _audioSource.reverbZoneMix = 0;
     }
 
-    public void OnCollisionEnter2D(Collision2D other)
+    public void OnCollisionEnter(Collision other)
     {
         var player = other.gameObject.GetComponentInParent<Player>() ??
                      other.gameObject.GetComponentInChildren<Player>();
-        if (player != null)
+        if (player != null && FindFirstObjectByType<GameController>().GetPlayerNumber(this) < FindFirstObjectByType<GameController>().GetPlayerNumber(player))
         {
-            Debug.Log($"Collided with player: {other.gameObject}");
-            if (playerHitSounds.Count <= 0)
+            Debug.Log($"Impact Magnitude: {other.impulse.magnitude}");
+            if (other.impulse.magnitude > 200f)
             {
-                Debug.LogWarning("No player hit sounds found", this);
-                return;
-            }
+                if (playerHeavyHitSounds.Count <= 0)
+                {
+                    Debug.LogWarning("No player hit sounds found", this);
+                    return;
+                }
 
-            _audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
-            _audioSource.PlayOneShot(playerHitSounds[UnityEngine.Random.Range(0, playerHitSounds.Count)]);
+                _audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+                _audioSource.PlayOneShot(playerHeavyHitSounds[UnityEngine.Random.Range(0, playerHeavyHitSounds.Count)]);
+            }
+            else
+            {
+                if (playerSoftHitSounds.Count <= 0)
+                {
+                    Debug.LogWarning("No player hit sounds found", this);
+                    return;
+                }
+
+                _audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+                _audioSource.PlayOneShot(playerSoftHitSounds[UnityEngine.Random.Range(0, playerSoftHitSounds.Count)]);
+            }
+            
         }
         else if (other.transform.CompareTag("Sink"))
         {
@@ -63,17 +79,18 @@ public class Player : MonoBehaviour
             _audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
             _audioSource.PlayOneShot(sinkHitSounds[UnityEngine.Random.Range(0, sinkHitSounds.Count)]);
         }
-        else if (other.transform.CompareTag("PickUp"))
-        {
-            if (pickUpSounds.Count <= 0)
-            {
-                Debug.LogWarning("No blob hit sounds found", this);
-                return;
-            }
+    }
 
-            _audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
-            _audioSource.PlayOneShot(pickUpSounds[UnityEngine.Random.Range(0, pickUpSounds.Count)]);
+    public void PlayPickUpSound()
+    {
+        if (pickUpSounds.Count <= 0)
+        {
+            Debug.LogWarning("No blob hit sounds found", this);
+            return;
         }
+
+        _audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+        _audioSource.PlayOneShot(pickUpSounds[UnityEngine.Random.Range(0, pickUpSounds.Count)]);
     }
 
     public void Reset()

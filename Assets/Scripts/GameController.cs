@@ -30,13 +30,83 @@ public class GameController : MonoBehaviour
     [SerializeField] private GameObject m_playerHudPrefab;
     [SerializeField] private GameObject m_resultMenuPrefab;
     [SerializeField] private GameObject m_mainMenuPrefab;
+    [SerializeField] private AudioSource _audioSource;
+    public float minPitch = 0.9f;
+    public float maxPitch = 1.1f;
+    
+    public List<AudioClip> countdownSounds;
+    public List<AudioClip> hoopSounds;
+    public List<AudioClip> timeUpSounds;
+    public List<AudioClip> gameStartSounds;
+    
+    void Start()
+    {
+        _audioSource = GetComponent<AudioSource>();
+        _audioSource.playOnAwake = false;
+        _audioSource.loop = false;
+        _audioSource.reverbZoneMix = 0;
+    }
 
+    void PlayCountDownSound()
+    {
+        if (countdownSounds.Count <= 0)
+        {
+            Debug.LogWarning("No countdown sounds found", this);
+            return;
+        }
+
+        _audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+        _audioSource.PlayOneShot(countdownSounds[UnityEngine.Random.Range(0, countdownSounds.Count)]);
+    }
+    
+    void PlayHoopSound()
+    {
+        if (hoopSounds.Count <= 0)
+        {
+            Debug.LogWarning("No hoop sounds found", this);
+            return;
+        }
+
+        _audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+        _audioSource.PlayOneShot(hoopSounds[UnityEngine.Random.Range(0, hoopSounds.Count)]);
+    }
+    
+    void PlayTimeUpSound()
+    {
+        if (timeUpSounds.Count <= 0)
+        {
+            Debug.LogWarning("No timeUpSounds found", this);
+            return;
+        }
+
+        _audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+        _audioSource.PlayOneShot(timeUpSounds[UnityEngine.Random.Range(0, timeUpSounds.Count)]);
+    }
+    
+    void PlayGameStartSound()
+    {
+        if (gameStartSounds.Count <= 0)
+        {
+            Debug.LogWarning("No gameStartSounds found", this);
+            return;
+        }
+
+        _audioSource.pitch = UnityEngine.Random.Range(minPitch, maxPitch);
+        _audioSource.PlayOneShot(gameStartSounds[UnityEngine.Random.Range(0, gameStartSounds.Count)]);
+    }
+    
+    public int GetPlayerNumber(Player player)
+    {
+        return _players.IndexOf(player);
+    }
+    
 
     private readonly List<Player> _players = new();
     private float m_timer;
     private float? m_player1Score;
     private bool started;
     private GameObject m_mainMenuRef;
+    public float startCountDownSoundAt = 6.5f;
 
     private void Awake()
     {
@@ -52,11 +122,16 @@ public class GameController : MonoBehaviour
         FindFirstObjectByType<Hoop>().Reset();
         Time.timeScale = 1f;
         started = true;
+        PlayGameStartSound();
     }
 
     public void EndGame()
     {
-        if (m_timer < 0) m_timer = 0;
+        if (m_timer <= 0)
+        {
+            m_timer = 0;
+            PlayTimeUpSound();
+        }
         m_player1Score = m_timer;
         Time.timeScale = 0f;
         StartRematch();
@@ -74,7 +149,11 @@ public class GameController : MonoBehaviour
 
     public void EndRematch()
     {
-        if (m_timer < 0) m_timer = 0;
+        if (m_timer <= 0)
+        {
+            m_timer = 0;
+            PlayTimeUpSound();
+        }
         Time.timeScale = 0f;
         if (m_timer == 0)
         {
@@ -95,6 +174,10 @@ public class GameController : MonoBehaviour
     private void Update()
     {
         if (!started) return;
+        if(m_timer >= startCountDownSoundAt && m_timer - Time.deltaTime < startCountDownSoundAt)
+        {
+            PlayCountDownSound();
+        }
         m_timer -= Time.deltaTime;
         TimerUpdated?.Invoke(m_timer);
         if (m_timer <= 0)
@@ -117,6 +200,7 @@ public class GameController : MonoBehaviour
 
     public void HoopTriggered()
     {
+        PlayHoopSound();
         if (m_player1Score == null)
         {
             EndGame();
