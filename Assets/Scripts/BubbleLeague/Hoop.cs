@@ -1,10 +1,12 @@
 using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace BubbleLeague
 {
     public class Hoop : MonoBehaviour
     {
+        public UnityEvent OnHoopTriggered;
         public Collider bottomCollider;
 
         private bool _touchingTop;
@@ -59,7 +61,7 @@ namespace BubbleLeague
             {
                 Debug.Log($"Middle: Failed!");
                 _touchingMiddle = false;
-                _touchingTop = false;
+                _touchingTop = false;this.bottomCollider.gameObject.layer = LayerMask.NameToLayer("DefenderAndAttacker");
             }
         }
 
@@ -84,19 +86,25 @@ namespace BubbleLeague
             if (!_touchingMiddle)
             {
                 Debug.Log($"Bottom: Failed!");
-                _touchingBottom = false;
-                _touchingMiddle = false;
-                _touchingTop = false;
+                this.bottomCollider.gameObject.layer = LayerMask.NameToLayer("DefenderAndAttacker");
             }
             else
             {
-                #if UNITY_EDITOR
-                UnityEditor.EditorApplication.ExitPlaymode();
-                #else
-                Application.Quit();
-                #endif
+                Debug.Log("Full Hoop!");
+                OnHoopTriggered?.Invoke();
             }
+            _touchingBottom = false;
+            _touchingMiddle = false;
+            _touchingTop = false;
+            
         }
-        
+
+        public void Reset()
+        {
+            _touchingBottom = false;
+            _touchingMiddle = false;
+            _touchingTop = false;
+            this.bottomCollider.gameObject.layer = LayerMask.NameToLayer("DefenderAndAttacker");
+        }
     }
 }

@@ -63,13 +63,9 @@ public class Player : MonoBehaviour
         }
     }
 
-    public void MakeAttacker()
+    public void Reset()
     {
-        gameObject.layer = LayerMask.NameToLayer("Defender");
-    }
-
-    public void MakeDefender()
-    {
-        gameObject.layer = LayerMask.NameToLayer("Attacker");
+        GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+        GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
     }
 }
