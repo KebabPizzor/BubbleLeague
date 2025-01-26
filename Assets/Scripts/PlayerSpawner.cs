@@ -16,6 +16,7 @@ public class PlayerSpawner : MonoBehaviour
         int playerCount = players.Count;
         players.Add(playerInput.GetComponent<Player>());
         players[playerCount].Color = _colors[playerCount];
+        players[playerCount].SetCharacter(playerCount);
         FindFirstObjectByType<GameController>().RegisterPlayer(players[playerCount]);
         
         if (playerInput.currentControlScheme == "KeyboardMouse")

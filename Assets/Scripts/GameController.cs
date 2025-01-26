@@ -8,19 +8,44 @@ using UnityEngine.Serialization;
 
 public class GameController : MonoBehaviour
 {
+    public enum Result
+    {
+        Player1,
+        Player2,
+        Draw
+    }
+
+    public enum Role
+    {
+        Attacker,
+        Defender
+    }
+
     public event Action<float> TimerUpdated;
     [SerializeField] private float m_gameDuration = 60.0f;
-    [SerializeField] GameObject playerHudPrefab;
     [SerializeField] private Transform defenderSpawnPoint;
     [SerializeField] private Transform attackerSpawnPoint;
-    
+
+    //GUI
+    [SerializeField] private GameObject m_playerHudPrefab;
+    [SerializeField] private GameObject m_resultMenuPrefab;
+    [SerializeField] private GameObject m_mainMenuPrefab;
+
+
     private readonly List<Player> _players = new();
     private float m_timer;
     private float? m_player1Score;
     private bool started;
-    
+    private GameObject m_startMenuRef;
+
+    private void Awake()
+    {
+        m_startMenuRef = Instantiate(m_mainMenuPrefab);
+    }
+
     public void StartGame()
     {
+        Destroy(m_startMenuRef);
         Debug.Log("Start Game!");
         m_timer = m_gameDuration;
         MakeDefender(_players[0]);
@@ -29,7 +54,7 @@ public class GameController : MonoBehaviour
         Time.timeScale = 1f;
         started = true;
     }
-    
+
     public void EndGame()
     {
         if (m_timer < 0) m_timer = 0;
@@ -37,11 +62,11 @@ public class GameController : MonoBehaviour
         Time.timeScale = 0f;
         StartRematch();
     }
-    
+
     public void StartRematch()
     {
         Debug.Log("Start Rematch!");
-        m_timer = m_gameDuration-m_player1Score!.Value;
+        m_timer = m_gameDuration - m_player1Score!.Value;
         MakeDefender(_players[1]);
         MakeAttacker(_players[0]);
         FindFirstObjectByType<Hoop>().Reset();
@@ -59,18 +84,13 @@ public class GameController : MonoBehaviour
             {
                 DrawPlayers();
             }
+
             WinPlayer1();
         }
         else
         {
             WinPlayer2();
         }
-    }
-
-    private void DrawPlayers()
-    {
-        Debug.Log("Draw between both players.");
-        QuitGame();
     }
 
     private void Update()
@@ -108,19 +128,30 @@ public class GameController : MonoBehaviour
         }
     }
 
+    private void DrawPlayers()
+    {
+        ShowResult(Result.Draw);
+    }
+
     private void WinPlayer1()
     {
-        Debug.Log("Player 1 Wins.");
-        QuitGame();
+        ShowResult(Result.Player1);
     }
+
 
     private void WinPlayer2()
     {
-        Debug.Log("Player 2 Wins.");
-        QuitGame();
+        ShowResult(Result.Player2);
     }
 
-    private void QuitGame()
+    private void ShowResult(Result result)
+    {
+        var resultMenu = Instantiate(m_resultMenuPrefab).GetComponent<ResultMenu>();
+        resultMenu.Initialize(result, this);
+        
+    }
+
+    public void QuitGame()
     {
 #if UNITY_EDITOR
         UnityEditor.EditorApplication.ExitPlaymode();
@@ -132,22 +163,26 @@ public class GameController : MonoBehaviour
     public void RegisterPlayer(Player player)
     {
         _players.Add(player);
-        
         var cam = player.GetComponentInChildren<Camera>();
-        var hud = Instantiate(playerHudPrefab).GetComponent<HUD>();
+        var hud = Instantiate(m_playerHudPrefab).GetComponent<HUD>();
         var canvas = hud.GetComponentInChildren<Canvas>();
         canvas.worldCamera = cam;
-        hud.Initialize();
         TimerUpdated += hud.UpdateTimer;
+        player.hudRef = hud;
+
+        var pa = player.GetComponentInChildren<PlayerAttributes>();
+        pa.Initialize();
+        pa.EnergyUpdated += hud.UpdateEnergy;
+        pa.BroadcastEnergy();
 
         var targetIndicator = hud.GetComponentInChildren<TargetIndicator>();
         player.TargetIndicator = targetIndicator;
         targetIndicator.cam = cam;
         targetIndicator.target = FindFirstObjectByType<Hoop>().transform;
-        
-        if(_players.Count == 2) StartGame();
+
+        if (_players.Count == 2) StartGame();
     }
-    
+
     public void MakeAttacker(Player player)
     {
         player.gameObject.layer = LayerMask.NameToLayer("Attacker");
@@ -155,6 +190,7 @@ public class GameController : MonoBehaviour
         player.GetComponentInChildren<BallMovement>().transform.rotation = attackerSpawnPoint.rotation;
         player.TargetIndicator.target = FindFirstObjectByType<Hoop>().transform;
         player.Reset();
+        player.hudRef.SetRole(Role.Attacker);
     }
 
     public void MakeDefender(Player player)
@@ -164,6 +200,7 @@ public class GameController : MonoBehaviour
         player.GetComponentInChildren<BallMovement>().transform.rotation = defenderSpawnPoint.rotation;
         player.TargetIndicator.target = _players.FirstOrDefault(it => it != player)?.transform;
         player.Reset();
+        player.hudRef.SetRole(Role.Defender);
     }
 
     public void UnregisterPlayer(Player player)
