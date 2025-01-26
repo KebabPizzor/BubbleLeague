@@ -13,7 +13,8 @@ namespace GUI
         {
             Vector3 screenPos = cam.WorldToScreenPoint(target.position);
 
-            if (screenPos.z > 0 && screenPos.x > 0 && screenPos.x < Screen.width && screenPos.y > 0 && screenPos.y < Screen.height)
+            Rect cameraRect = cam.pixelRect;
+            if (screenPos.z > 0 && screenPos.x > cameraRect.xMin && screenPos.x < cameraRect.xMax && screenPos.y > cameraRect.yMin && screenPos.y < cameraRect.yMax)
             {
                 // Target is on screen
                 Vector2 localPoint;
@@ -31,13 +32,15 @@ namespace GUI
                     cappedScreenPos *= -1;
                 }
 
-                Rect cameraRect = cam.pixelRect;
                 cappedScreenPos.x = Mathf.Clamp(cappedScreenPos.x, Mathf.Lerp(cameraRect.xMin, cameraRect.xMax, 0.05f), Mathf.Lerp(cameraRect.xMin, cameraRect.xMax, 0.95f));
                 cappedScreenPos.y = Mathf.Clamp(cappedScreenPos.y, Mathf.Lerp(cameraRect.yMin, cameraRect.yMax, 0.05f), Mathf.Lerp(cameraRect.yMin, cameraRect.yMax, 0.95f));
 
-                Vector2 localPoint;
-                RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, cappedScreenPos, cam, out localPoint);
+                RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRect, cappedScreenPos, cam, out var localPoint);
+
                 indicator.localPosition = localPoint;
+                
+                Debug.Log($"Capped Screen Pos: {cappedScreenPos}");
+                Debug.Log($"Local Point: {localPoint}");
                 
                 // Calculate the angle to point the indicator in the correct direction
                 Vector2 screenCenter = new Vector2(Mathf.Lerp(cameraRect.xMin, cameraRect.xMax, 0.5f), Mathf.Lerp(cameraRect.yMin, cameraRect.yMax, 0.5f));
