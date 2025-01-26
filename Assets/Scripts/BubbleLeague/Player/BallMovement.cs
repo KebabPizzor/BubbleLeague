@@ -50,7 +50,7 @@ public class BallMovement : MonoBehaviour
 
     private void Update()
     {
-        transform.Rotate(Vector3.up * (m_lookInput.x * m_rotationSpeed));
+        transform.Rotate(Vector3.up * (m_lookInput.x * m_rotationSpeed) + Vector3.left * (m_lookInput.y * m_rotationSpeed));
         UpdateEnergy();
     }
 
@@ -63,7 +63,6 @@ public class BallMovement : MonoBehaviour
     private void LateUpdate()
     {
         transform.position = m_sphere.transform.position;
-        m_camera.transform.Rotate(Vector3.left * (m_lookInput.y * m_rotationSpeed));
     }
 
     private void FixedUpdate()

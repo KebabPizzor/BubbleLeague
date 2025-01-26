@@ -9,7 +9,7 @@ namespace GUI
         public Camera cam; // The camera used for the split screen
         public RectTransform canvasRect; // The RectTransform of the canvas
 
-        void Update()
+        void LateUpdate()
         {
             Vector3 screenPos = cam.WorldToScreenPoint(target.position);
 
