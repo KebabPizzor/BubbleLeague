@@ -18,6 +18,8 @@ public class BallMovement : MonoBehaviour
     private Rigidbody m_rigidbody;
     private PlayerAttributes m_playerAttributes;
 
+    public Animator Animator;
+
     //Sprint
     private float m_sprintFactor;
     private bool m_isSprinting;
@@ -32,6 +34,10 @@ public class BallMovement : MonoBehaviour
     {
         m_sprintFactor = sprintForce;
         m_isSprinting = m_sprintFactor > 0f;
+        if (Animator != null)
+        {
+            Animator.SetBool("Run", sprintForce > 0.0f);
+        }
     }
 
     public void OnLook(Vector2 value)
@@ -41,6 +47,10 @@ public class BallMovement : MonoBehaviour
 
     public void OnMove(Vector2 value)
     {
+        if (Animator != null)
+        {
+            Animator.SetBool("Walk", value.magnitude > 0.1f);
+        }
         m_moveInput = value;
     }
 

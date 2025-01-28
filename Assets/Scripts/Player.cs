@@ -25,8 +25,22 @@ public class Player : MonoBehaviour
 
     public void SetCharacter(int character)
     {
-        duck.SetActive(character == 0);
-        frog.SetActive(character == 1);
+        if (character == 0)
+        {
+            duck.SetActive(true);
+            frog.SetActive(false);
+            GetComponentInChildren<BallMovement>().Animator = duck.GetComponent<Animator>();
+        }
+        else if(character == 1)
+        {
+            frog.SetActive(true);
+            duck.SetActive(false);
+            GetComponentInChildren<BallMovement>().Animator = frog.GetComponent<Animator>();
+        }
+        else
+        {
+            Debug.LogError($"Invalid Character Number: {character}");
+        }
     }
 
     void Start()

@@ -17,6 +17,8 @@ namespace BubbleLeague.Player
         [SerializeField] private LayerMask m_groundLayer;
         [SerializeField] private float m_groundCheckMultiplier = 1.01f;
         
+        public Animator Animator;
+        
         protected void Awake()
         {
             m_rigidbody = m_sphere.GetComponent<Rigidbody>();
@@ -29,6 +31,11 @@ namespace BubbleLeague.Player
             
             m_rigidbody.AddForce((transform.position-m_sphere.GetComponent<GroundContactSaver>().LatestGroundContact).normalized * m_jumpForce, ForceMode.Acceleration);
             m_timeWithoutFastFall = m_jumpFastFallDelay;
+            
+            if (Animator != null)
+            {
+                Animator.SetTrigger("Jump");
+            }
         }
 
         private void FixedUpdate()
